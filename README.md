@@ -18,10 +18,11 @@ Add two buttons with vector icons.
 
 Call appropriate method of mainactivity after pressing buttons of toolbar.
 
-<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/d0f7df67-38a1-4f08-a4a7-88f41cdd9039" width=20% height=20%>
+<img src="![1](https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/5d209d68-031a-4312-ae88-74ed1fc4c72d)
+" width=20% height=20%>
 
-<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/08440b41-05da-4e5e-9e23-9ba888771dc4" width=20% height=20%>
+<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/e7982b0d-ae83-4013-a327-091ff8fc81a0" width=20% height=20%>
 
-<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/e35f2a79-7600-491f-b724-eb735c5e63d0" width=20% height=20%>
+<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/63b98fcb-67db-4169-93ea-f25a8ac599e7" width=20% height=20%>
 
-<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/dc647dc8-963e-41c2-bd14-f0d18a535323" width=20% height=20%>
+<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/a8138fe2-0eba-4a09-a4f7-2d7958d3e3b0" width=20% height=20%>
