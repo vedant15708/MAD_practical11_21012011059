@@ -17,3 +17,11 @@ Add main_menu.xml file to toolbar of Activity as Option menu.
 Add two buttons with vector icons.
 
 Call appropriate method of mainactivity after pressing buttons of toolbar.
+
+<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/e81eadad-3607-40ea-bbe6-bbbde66d0e61" width=20% height=20%>
+
+<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/afabafe3-4f80-41b1-a63a-51452eddf1d7" width=20% height=20%>
+
+<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/e102252a-f108-4f50-b23b-2a38d9b47b58" width=20% height=20%>
+
+<img src="https://github.com/vedant15708/MAD_practical11_21012011059/assets/98215447/bedc3611-c479-4162-98ce-59d683108eaf" width=20% height=20%>
