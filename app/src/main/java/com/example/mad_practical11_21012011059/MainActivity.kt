@@ -2,6 +2,8 @@ package com.example.mad_practical11_21012011059
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.CoroutineScope
@@ -16,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.toolbar))
         val fab:FloatingActionButton=findViewById(R.id.fab)
         fab.setOnClickListener{
             CoroutineScope(Dispatchers.IO).launch {
@@ -34,6 +37,27 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+            }
+        }
+    }
+
+    fun jsonDB(){
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+     menuInflater.inflate(R.menu.main_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){R.id.share->{
+
+            true
+        }
+
+            else -> {
+                super.onOptionsItemSelected(item)
             }
         }
     }

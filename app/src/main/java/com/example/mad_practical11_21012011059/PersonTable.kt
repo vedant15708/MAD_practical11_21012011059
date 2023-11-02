@@ -1,23 +1,26 @@
 package com.example.mad_practical11_21012011059
 
+import android.database.sqlite.SQLiteDatabase
+
 class PersonTable {
     companion object{
-        val TABLE_NAME="PERSON"
-        val COLUMN_ID="ID"
-        val COLUMN_NAME="NAME"
-        val COLUMN_EMAILID="emailid"
-        val COLUMN_PHONENO="phoneno"
-        val COLUMN_ADDRESS="address"
-        val COLUMN_LATITUDE="latitude"
-        val COLUMN_LONGITUDE="longitude"
+        val TABLE_NAME = "Person"
+        val COLUMN_ID = "Id"
+        val COLUMN_NAME = "Name"
+        val COLUMN_ADDRESS = "Address"
+        val COLUMN_EMAILID = "EmailId"
+        val COLUMN_PHONENO = "PhoneNo"
+        val COLUMN_GPS_LAT = "Person_lat"
+        val COLUMN_GPS_LONG = "Person_Long"
+
+        val CREATE_TABLE = ("CREATE TABLE" + TABLE_NAME + "("
+                + COLUMN_ID + "TEXT PRIMARY KEY,"
+                + COLUMN_NAME + "TEXT,"
+                + COLUMN_EMAILID + "TEXT,"
+                + COLUMN_PHONENO + "TEXT,"
+                + COLUMN_ADDRESS + "TEXT,"
+                + COLUMN_GPS_LAT + "REAL"
+                + COLUMN_GPS_LONG + "REAL"
+                + ")")
     }
-    val CREATE_TABLE=("CREATE TABLE"+ TABLE_NAME + "("
-            + COLUMN_ID +"TEXT PRIMARY KEY,"
-            + COLUMN_NAME+ "TEXT,"
-            + COLUMN_EMAILID+"TEXT,"
-            + COLUMN_PHONENO+"TEXT,"
-            + COLUMN_ADDRESS+"TEXT,"
-            + COLUMN_LATITUDE+"REAL,"
-            + COLUMN_LONGITUDE+"REAL"
-            +")")
 }
