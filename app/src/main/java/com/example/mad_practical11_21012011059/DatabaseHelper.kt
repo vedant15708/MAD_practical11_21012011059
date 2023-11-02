@@ -1,133 +1,105 @@
 package com.example.mad_practical11_21012011059
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-
-class DatabaseHelper(context: Context?) :
-    SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION){
+import org.json.JSONObject
+class DatabaseHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null,
+    DATABASE_VERSION){
     companion object{
-        private val DATABASE_VERSION = 1
-        private val DATABASE_NAME = "persons_db"
+        private const val DATABASE_VERSION = 1
+        private const val DATABASE_NAME = "persons.db"
+        private const val TABLE_NAME = "person"
+        private const val COLUMN_ID = "id"
+        private const val COLUMN_PERSON_NAME = "person_name"
+        private const val COLUMN_PERSON_EMAIL_ID = "person_email_id"
+        private const val COLUMN_PERSON_PHONE_NO = "person_phone_no"
+        private const val COLUMN_PERSON_ADDRESS = "person_address"
+        private const val COLUMN_PERSON_GPS_LAT = "person_lat"
+        private const val COLUMN_PERSON_GPS_LONG = "person_long"
     }
+    override fun onCreate(db: SQLiteDatabase?) {
+        val CREATE_TABLE = ("CREATE TABLE " + TABLE_NAME + "("
+                + COLUMN_ID + " TEXT PRIMARY KEY,"
+                + COLUMN_PERSON_NAME + " TEXT,"
+                + COLUMN_PERSON_EMAIL_ID + " TEXT,"
+                + COLUMN_PERSON_PHONE_NO + " TEXT,"
+                + COLUMN_PERSON_ADDRESS + " TEXT,"
+                + COLUMN_PERSON_GPS_LAT + " REAL,"
+                + COLUMN_PERSON_GPS_LONG + " REAL)")
 
-    override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL(PersonTable.CREATE_TABLE)
+        if (db != null) {
+            db.execSQL(CREATE_TABLE)
+        }
     }
-
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL("DROP TABLE IF EXISTS" + PersonTable.TABLE_NAME)
-        onCreate(db)
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        if (db != null) {
+            db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        }
     }
-    fun insertPerson(person: Person): Long {
-        // get writable database as we want to write data
-        val db = this.writableDatabase
-        // insert row
-        val id = db.insert(PersonTable.TABLE_NAME, null, getValues(person))
-        // close db connection
+    fun insertPerson(person: Person) : Long
+    {
+        val db =writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_ID,person.id)
+        contentValues.put(COLUMN_PERSON_NAME,person.name)
+        contentValues.put(COLUMN_PERSON_EMAIL_ID,person.emailId)
+        contentValues.put(COLUMN_PERSON_PHONE_NO,person.phoneNo)
+        contentValues.put(COLUMN_PERSON_ADDRESS,person.address)
+        contentValues.put(COLUMN_PERSON_GPS_LAT,person.latitude)
+        contentValues.put(COLUMN_PERSON_GPS_LONG,person.longitude)
+        val count = db.insert(TABLE_NAME, null, contentValues)
         db.close()
-        // return newly inserted row id
-        return id
+        return count
     }
-    private fun getValues(person: Person): ContentValues {
-        val values = ContentValues()
-        // `id` will be inserted automatically.
-        // no need to add them
-        values.put(PersonTable.COLUMN_ID, person.id)
-        values.put(PersonTable.COLUMN_NAME, person.name)
-        values.put(PersonTable.COLUMN_EMAILID, person.emailId)
-        values.put(PersonTable.COLUMN_PHONENO, person.phoneNO)
-        values.put(PersonTable.COLUMN_GPS_LAT, person.latitude)
-        values.put(PersonTable.COLUMN_ADDRESS, person.address)
-        values.put(PersonTable.COLUMN_GPS_LONG, person.longitude)
-        return values
+    fun deletePerson(personId: String) : Int
+    {
+        val db = writableDatabase
+        val selection ="$COLUMN_ID = ?"
+        val selectionArgs = arrayOf(personId)
+        val count =db.delete(TABLE_NAME,selection,selectionArgs)
+        db.close()
+        return count
     }
-    fun getPerson(id: String): Person? {
-        // get readable database as we are not inserting anything
-        val db = this.readableDatabase
-        val cursor = db.query(
-            PersonTable.TABLE_NAME,
-            arrayOf(PersonTable.COLUMN_ID,
-                PersonTable.COLUMN_NAME,
-                PersonTable.COLUMN_EMAILID,
-                PersonTable.COLUMN_PHONENO,
-                PersonTable.COLUMN_ADDRESS,
-                PersonTable.COLUMN_GPS_LAT,
-                PersonTable.COLUMN_GPS_LONG),
-            PersonTable.COLUMN_ID + "=?",
-            arrayOf(id),
-            null,
-            null,
-            null,
-            null
-        ) ?: return null
-        cursor.moveToFirst()
-        if(cursor.count == 0)
-            return null
-        val person = getPerson(cursor)
-        // close the db connection
+    @SuppressLint("Range")
+    fun getAllPersons() :ArrayList<Person>
+    {
+        val personList = arrayListOf<Person>()
+        val db =readableDatabase
+        var query = "SELECT * FROM $TABLE_NAME"
+        var cursor : Cursor =db.rawQuery(query,null)
+        while (cursor.moveToNext())
+        {
+            var id : String = cursor.getString(cursor.getColumnIndex(COLUMN_ID))
+            var name : String = cursor.getString(cursor.getColumnIndex(COLUMN_PERSON_NAME))
+            var email : String = cursor.getString(cursor.getColumnIndex(COLUMN_PERSON_EMAIL_ID))
+            var phone : String = cursor.getString(cursor.getColumnIndex(COLUMN_PERSON_PHONE_NO))
+            var address: String = cursor.getString(cursor.getColumnIndex(COLUMN_PERSON_ADDRESS))
+
+            var latitude : Double =
+                cursor.getDouble(cursor.getColumnIndex(COLUMN_PERSON_GPS_LAT))
+            var longitude: Double =
+                cursor.getDouble(cursor.getColumnIndex(COLUMN_PERSON_GPS_LONG))
+            val jsonObject = JSONObject()
+            jsonObject.put("id", id)
+            jsonObject.put("email", email)
+            jsonObject.put("phone", phone)
+            val profileJson = JSONObject()
+            profileJson.put("name", name) // You'll need to fill in the actual name value here
+            profileJson.put("address", address)
+            val locationJson = JSONObject()
+            locationJson.put("lat", latitude)
+            locationJson.put("long", longitude)
+            profileJson.put("location", locationJson)
+            jsonObject.put("profile", profileJson)
+            val person = Person(jsonObject)
+            personList.add(person)
+        }
         cursor.close()
-        return person
-    }
-    private fun getPerson(cursor: Cursor): Person {
-        return Person(
-            cursor.getString(cursor.getColumnIndexOrThrow(PersonTable.COLUMN_ID)),
-            cursor.getString(cursor.getColumnIndexOrThrow(PersonTable.COLUMN_NAME)),
-            cursor.getString(cursor.getColumnIndexOrThrow(PersonTable.COLUMN_EMAILID)),
-            cursor.getString(cursor.getColumnIndexOrThrow(PersonTable.COLUMN_PHONENO)),
-            cursor.getString(cursor.getColumnIndexOrThrow(PersonTable.COLUMN_ADDRESS)),
-            cursor.getDouble(cursor.getColumnIndexOrThrow(PersonTable.COLUMN_GPS_LAT)),
-            cursor.getDouble(cursor.getColumnIndexOrThrow(PersonTable.COLUMN_GPS_LONG))
-        )
-    }
-    val allPersons: ArrayList<Person>
-        get() {
-            val persons = ArrayList<Person>()
-            // Select All Query
-            val selectQuery = "SELECT  * FROM " + PersonTable.TABLE_NAME + " ORDER BY " +
-                    PersonTable.COLUMN_NAME + " DESC"
-            val db = this.writableDatabase
-            val cursor = db.rawQuery(selectQuery, null)
-            // looping through all rows and adding to list
-            if (cursor.moveToFirst()) {
-                do {
-                    persons.add(getPerson(cursor))
-                } while (cursor.moveToNext())
-            }
-            // close db connection
-            db.close()
-            // return persons list
-            return persons
-        }
-    val personsCount: Int
-        get() {
-            val countQuery = "SELECT  * FROM " + PersonTable.TABLE_NAME
-            val db = this.readableDatabase
-            val cursor = db.rawQuery(countQuery, null)
-            val count = cursor.count
-            cursor.close()
-            // return count
-            return count
-        }
-    fun updatePerson(person: Person): Int {
-        val db = this.writableDatabase
-        // updating row
-        return db.update(
-            PersonTable.TABLE_NAME,
-            getValues(person),
-            PersonTable.COLUMN_ID + " = ?",
-            arrayOf(person.id)
-        )
-    }
-    fun deletePerson(person: Person) {
-        val db = this.writableDatabase
-        db.delete(
-            PersonTable.TABLE_NAME,
-            PersonTable.COLUMN_ID + " = ?",
-            arrayOf(person.id)
-        )
         db.close()
+        return personList
     }
 }
